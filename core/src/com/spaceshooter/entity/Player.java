@@ -40,11 +40,11 @@ public class Player
     private boolean Fired;
 
     private float timeSinceLastShot;
-    private static final float SHOOT_INTERVAL = 0.3f;
+    private static final float SHOOT_INTERVAL = 0.7f;
 
     public Player(String img, Texture bul, float xp, float yp, float ScaleX, float ScaleY, float speed, float bulletSpeed)
     {
-        this.position = new Vector2(xp,yp);
+        this.position = new Vector2();
         this.bullets = new Array<>();
 
         this.ScaleX = ScaleX;
@@ -102,7 +102,7 @@ public class Player
             moved = true;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.L)) {
             position.x += speed * deltaTime;
             if (position.x + sprite.getWidth() > screenWidth) {
                 position.x = screenWidth - sprite.getWidth(); // right block
@@ -132,7 +132,7 @@ public class Player
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) && timeSinceLastShot >= SHOOT_INTERVAL  || Gdx.input.isKeyJustPressed(Input.Keys.UP)  && timeSinceLastShot >= SHOOT_INTERVAL) {
             fireBullet();
             timeSinceLastShot = 0f;
-            awp.play(0.04f);
+            awp.play(0.03f);
         }
     }
 
@@ -184,5 +184,8 @@ public class Player
             bulletBounds.add(bullet.getBoundingRectangle());
         }
         return bulletBounds;
+    }
+    public void removeBullet(Sprite bullet) {
+        bullets.removeValue(bullet, true);
     }
 }

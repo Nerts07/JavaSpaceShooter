@@ -1,30 +1,67 @@
 package com.spaceshooter.manager;
 
-public abstract class SoundEngine
-{
-    enum randomMusic
-    {
-        DFM(1, "Die For Me.mp3" ),
-        OYG(2,"Once You Gone.mp3" );
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 
-        private final int Id;
+import java.util.Hashtable;
+import java.util.Random;
+
+public class SoundEngine
+{
+    enum GameMusic
+    {
+        DFM("Die For Me.mp3"),
+        OYG("Once You Gone.mp3"),
+        CNS("Cons.mp3"),
+        bita("backinthea.mp3");
+
         private final String filePath;
 
 
-        randomMusic(int Id, String filePath)
+        GameMusic(String filePath)
         {
-            this.Id = Id;
             this.filePath = filePath;
         }
 
-        public int getId()
-        {
-            return Id;
-        }
 
         public String getfilePathOfTrack()
         {
             return filePath;
+        }
+    }
+
+    private Hashtable<GameMusic, Music> musicTable;
+    private Random random;
+
+    public SoundEngine()
+    {
+        musicTable = new Hashtable<>();
+        random = new Random();
+        loadMusic();
+    }
+
+    public void loadMusic()
+    {
+        for (GameMusic c: GameMusic.values())
+        {
+            Music music = Gdx.audio.newMusic(Gdx.files.internal(c.getfilePathOfTrack()));
+            musicTable.put(c, music);
+            
+        }
+    }
+    
+    public Music getRandomMusic()
+    {
+        int index = random.nextInt(GameMusic.values().length);
+        GameMusic randomMusic = GameMusic.values()[index];
+        return musicTable.get(randomMusic);
+    }
+
+    public void dispose()
+    {
+        for (Music music : musicTable.values())
+        {
+            music.dispose();
         }
     }
 }
